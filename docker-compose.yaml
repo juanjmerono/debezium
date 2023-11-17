@@ -1,35 +1,67 @@
 version: "3.9"
 services:
   # Install Source MySQL DB and setup the Customer database
-  mysql-1:
-    container_name: source-database
-    image: mysql:8.0-debian
-    ports:
-      - 3305:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: customerdb
+  # mysql-1:
+  #   container_name: source-database
+  #   image: mysql:8.0-debian
+  #   ports:
+  #     - 3305:3306
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_USER: user
+  #     MYSQL_PASSWORD: password
+  #     MYSQL_DATABASE: customerdb
 
   # Install Target MySQL DB and setup the Customer database
-  mysql-2:
-    container_name: target-database
-    image: mysql:8.0-debian
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: customerdb
+  # mysql-2:
+  #   container_name: target-database
+  #   image: mysql:8.0-debian
+  #   ports:
+  #     - 3306:3306
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_USER: user
+  #     MYSQL_PASSWORD: password
+  #     MYSQL_DATABASE: customerdb
 
   # debezium-1:
-  #   container_name: source-debezium
+  #   container_name: source-mysql-debezium
   #   image: debezium/server
   #   #image: quay.io/debezium/connect
   #   depends_on: 
   #     - mysql-1
   #   volumes:
-  #     - ./debezium.properties:/debezium/conf/application.properties
-  #     - ./data:/debezium/data
+  #     - ./debezium-mysql.properties:/debezium/conf/application.properties
+  #     #- ./data:/debezium/data
+
+  # Install Source Oracle DB and setup the Customer database
+  oracle-1:
+    container_name: source-database
+    image: gvenzl/oracle-xe:11
+    ports:
+      - 1521:1521
+    environment:
+      ORACLE_PASSWORD: root
+      APP_USER: myuser
+      APP_USER_PASSWORD: mypassword
+
+  # Install Source Oracle DB and setup the Customer database
+  oracle-2:
+    container_name: target-database
+    image: gvenzl/oracle-xe:11
+    ports:
+      - 1522:1521
+    environment:
+      ORACLE_PASSWORD: root
+      APP_USER: myuser
+      APP_USER_PASSWORD: mypassword
+
+  # debezium-2:
+  #   container_name: source-oracle-debezium
+  #   image: debezium/server
+  #   #image: quay.io/debezium/connect
+  #   depends_on: 
+  #     - oracle-1
+  #   volumes:
+  #     - ./debezium-oracle.properties:/debezium/conf/application.properties
+  #     #- ./data:/debezium/data

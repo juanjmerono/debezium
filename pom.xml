@@ -17,6 +17,7 @@
 		<java.version>17</java.version>
 		<testcontainers.version>1.18.3</testcontainers.version>
 		<debezium.version>2.3.4.Final</debezium.version>
+		<jdbc-driver.version>12.2.0.1.0</jdbc-driver.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -69,6 +70,11 @@
         </dependency>
 		<!-- Fin Debezium -->
 		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>jdbc.driver</artifactId>
+			<version>${jdbc-driver.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.33</version>
@@ -102,6 +108,24 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<profiles>
+		<profile>
+			<id>oracle</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<spring.profiles.active>oracle</spring.profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>mysql</id>
+			<properties>
+				<spring.profiles.active>mysql</spring.profiles.active>
+			</properties>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>

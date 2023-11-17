@@ -67,10 +67,10 @@ public class DebeziumListener {
                 //this.customerService.replicateData(payload, operation);
                 log.info("Updated Data: {} with Operation: {}", payload, operation.name());
                 if (operation == Operation.CREATE) {
-                    userService.createUserWithId(payload.get("userid").toString(),payload.get("username").toString());
+                    userService.createUserWithId(payload.get("USERID").toString(),payload.get("USERNAME").toString());
                 }
                 if (operation == Operation.UPDATE) {
-                    userService.changeUserName(payload.get("userid").toString(),payload.get("username").toString());
+                    userService.changeUserName(payload.get("USERID").toString(),payload.get("USERNAME").toString());
                 }
             }
         }

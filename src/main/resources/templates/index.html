@@ -23,6 +23,7 @@
     </head>
     <body>
         <h1>Debezium</h1>
+        <h3>Last refresh: <span id="hour"></span></h3>
         <div class="row">
             <div id="sourcedb" class="column">
                 <h2>Source Database</h2>
@@ -73,11 +74,7 @@
                     body: JSON.stringify({username: uname})                    
                 }).then(function (response) {
 	                // The API call was successful!
-	                setTimeout(function() {
-                        //loadUsers(id);
-                        loadUsers('usersource');
-                        loadUsers('usertarget');
-                    },1000);
+                    loadUsers(id);
                 }).catch(function (err) {
 	                // There was an error
 	                console.warn('Something went wrong.', err);
@@ -93,11 +90,7 @@
                     body: JSON.stringify({username: uname})
                 }).then(function (response) {
 	                // The API call was successful!
-	                setTimeout(function() {
-                        //loadUsers(id);
-                        loadUsers('usersource');
-                        loadUsers('usertarget');
-                    },1000);
+                    loadUsers(id);
                 }).catch(function (err) {
 	                // There was an error
 	                console.warn('Something went wrong.', err);
@@ -111,8 +104,16 @@
                 document.getElementById('addusertarget').addEventListener('click',function() {
                     createUser('usertarget')
                 });
-                loadUsers('usersource');
-                loadUsers('usertarget');
+                setInterval(function() {
+                    let today = new Date();
+                    let h = (today.getHours()>9 ? '':'0')+today.getHours();
+                    let m = (today.getMinutes()>9 ? '':'0')+today.getMinutes();
+                    let s = (today.getSeconds()>9 ? '':'0')+today.getSeconds();
+                    let time = `${h}:${m}:${s}`;
+                    document.getElementById('hour').innerHTML = time;
+                    loadUsers('usersource');
+                    loadUsers('usertarget');
+                },5000);
             });            
         </script>
       </body>
