@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SpringBoot Debezium Demo!!</title>
+        <style>
+            * {
+              box-sizing: border-box;
+            }
+            /* Create two equal columns that floats next to each other */
+            .column {
+              float: left;
+              width: 50%;
+              padding: 10px;
+              height: 300px; /* Should be removed. Only for demonstration */
+            }
+            /* Clear floats after the columns */
+            .row:after {
+              content: "";
+              display: table;
+              clear: both;
+            }
+        </style>   
+    </head>
+    <body>
+        <h1>Debezium</h1>
+        <div class="row">
+            <div id="sourcedb" class="column">
+                <h2>Source Database</h2>
+                <button id="addusersource">Add User</button>
+                <div id="usersource">
+                </div>
+            </div>
+            <div id="tagertdb" class="column">
+                <h2>Target Database</h2>
+                <button id="addusertarget">Add User</button>
+                <div id="usertarget">
+                </div>
+            </div>
+        </div>
+        <script>
+
+            function loadUsers(id) {
+                fetch('/'+id).then(function (response) {
+	                // The API call was successful!
+	                return response.json();
+                }).then(function (data) {
+	                // This is the JSON from our response
+                    let lista = document.createElement('ul');             
+                    data.forEach(element => {
+                        let item = document.createElement('li');
+                        let change = document.createElement('a');
+                        change.addEventListener('click',function(){
+                            changeUser('usersource',element.userid);
+                        });
+                        change.appendChild(document.createTextNode(`[${element.userid.substring(0,5)}...] ${element.username}`));
+                        item.appendChild(change);
+                        lista.appendChild(item);
+                    });
+                    document.getElementById(id).innerHTML = '';
+                    document.getElementById(id).appendChild(lista);
+                }).catch(function (err) {
+	                // There was an error
+	                console.warn('Something went wrong.', err);
+                });  
+            }
+
+            function createUser(id) {
+                let uname = prompt('User Name: ','Spiderman');
+                if (uname==null || uname.trim().length === 0) return;
+                fetch('/'+id,{
+                    method:'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({username: uname})                    
+                }).then(function (response) {
+	                // The API call was successful!
+	                setTimeout(function() {
+                        //loadUsers(id);
+                        loadUsers('usersource');
+                        loadUsers('usertarget');
+                    },1000);
+                }).catch(function (err) {
+	                // There was an error
+	                console.warn('Something went wrong.', err);
+                });
+            }
+
+            function changeUser(id,uid) {
+                let uname = prompt('User Name: ','Spiderman');
+                if (uname==null || uname.trim().length === 0) return;
+                fetch('/'+id+'/'+uid,{
+                    method:'PUT',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({username: uname})
+                }).then(function (response) {
+	                // The API call was successful!
+	                setTimeout(function() {
+                        //loadUsers(id);
+                        loadUsers('usersource');
+                        loadUsers('usertarget');
+                    },1000);
+                }).catch(function (err) {
+	                // There was an error
+	                console.warn('Something went wrong.', err);
+                });
+            }
+
+            window.addEventListener('load', function(event) {
+                document.getElementById('addusersource').addEventListener('click',function() {
+                    createUser('usersource')
+                });
+                document.getElementById('addusertarget').addEventListener('click',function() {
+                    createUser('usertarget')
+                });
+                loadUsers('usersource');
+                loadUsers('usertarget');
+            });            
+        </script>
+      </body>
+</html>

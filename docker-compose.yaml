@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  # Install Source MySQL DB and setup the Customer database
+  mysql-1:
+    container_name: source-database
+    image: mysql:8.0-debian
+    ports:
+      - 3305:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: customerdb
+
+  # Install Target MySQL DB and setup the Customer database
+  mysql-2:
+    container_name: target-database
+    image: mysql:8.0-debian
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: customerdb
+
+  # debezium-1:
+  #   container_name: source-debezium
+  #   image: debezium/server
+  #   #image: quay.io/debezium/connect
+  #   depends_on: 
+  #     - mysql-1
+  #   volumes:
+  #     - ./debezium.properties:/debezium/conf/application.properties
+  #     - ./data:/debezium/data
