@@ -44,6 +44,10 @@ public class DebeziumListener {
         this.userService = userService;
     }
 
+    private String fromPayload(Map<String, Object> payload, String field) {
+        return payload.get(field)!=null ? payload.get(field).toString() : payload.get(field.toLowerCase()).toString();
+    }
+
     private void handleChangeEvent(RecordChangeEvent<SourceRecord> sourceRecordRecordChangeEvent) {
         SourceRecord sourceRecord = sourceRecordRecordChangeEvent.record();
 
@@ -66,11 +70,11 @@ public class DebeziumListener {
 
                 //this.customerService.replicateData(payload, operation);
                 log.info("Updated Data: {} with Operation: {}", payload, operation.name());
-                if (operation == Operation.CREATE) {
-                    userService.createUserWithId(payload.get("USERID").toString(),payload.get("USERNAME").toString());
+                if (operation == Operation.CREATE) {   
+                    userService.createUserWithId(fromPayload(payload, "USERID"),fromPayload(payload, "USERNAME"));
                 }
                 if (operation == Operation.UPDATE) {
-                    userService.changeUserName(payload.get("USERID").toString(),payload.get("USERNAME").toString());
+                    userService.changeUserName(fromPayload(payload, "USERID"),fromPayload(payload, "USERNAME"));
                 }
             }
         }
