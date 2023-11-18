@@ -125,6 +125,18 @@
 				<spring.profiles.active>mysql</spring.profiles.active>
 			</properties>
 		</profile>
+		<profile>
+			<id>mixom</id>
+			<properties>
+				<spring.profiles.active>mixom</spring.profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>mixmo</id>
+			<properties>
+				<spring.profiles.active>mixmo</spring.profiles.active>
+			</properties>
+		</profile>
 	</profiles>
 
 	<build>

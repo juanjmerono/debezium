@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>SpringBoot Debezium Demo!!</title>
+        <title th:text="${title}"></title>
         <style>
             * {
               box-sizing: border-box;
@@ -26,13 +26,13 @@
         <h3>Last refresh: <span id="hour"></span></h3>
         <div class="row">
             <div id="sourcedb" class="column">
-                <h2>Source Database</h2>
+                <h2 th:text="${srcdatabase}">Source Database</h2>
                 <button id="addusersource">Add User</button>
                 <div id="usersource">
                 </div>
             </div>
             <div id="tagertdb" class="column">
-                <h2>Target Database</h2>
+                <h2 th:text="${tgtdatabase}">Target Database</h2>
                 <button id="addusertarget">Add User</button>
                 <div id="usertarget">
                 </div>

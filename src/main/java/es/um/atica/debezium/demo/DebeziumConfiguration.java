@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 public class DebeziumConfiguration {
 
     @Bean
-    @Profile("mysql")
+    @Profile({"mysql","mixmo"})
     public io.debezium.config.Configuration mysqlConnector() {
         return io.debezium.config.Configuration.create()
         .with("name", "source-mysql-connector")
@@ -32,12 +32,12 @@ public class DebeziumConfiguration {
         //.with("schema.history.internal", "io.debezium.storage.file.history.FileSchemaHistory")
         //.with("schema.history.internal.file.filename", "/tmp/schistory.dat")
         .with("database.allowPublicKeyRetrieval","true")
-        .with("topic.prefix","tutorial")
+        .with("topic.prefix","msql")
         .build();
     }
 
     @Bean
-    @Profile("oracle")
+    @Profile({"oracle","mixom"})
     public io.debezium.config.Configuration oracleConnector() {
         return io.debezium.config.Configuration.create()
         .with("name", "source-oracle-connector")
@@ -52,7 +52,7 @@ public class DebeziumConfiguration {
         .with("database.dbname", "XE")
         .with("database.include.list", "XE")
         .with("include.schema.changes", "false")
-        .with("database.server.id", "10181")
+        .with("database.server.id", "20181")
         .with("database.server.name", "source-oracle-db-server")
         .with("database.history", "io.debezium.relational.history.MemoryDatabaseHistory")
         //.with("database.history", "io.debezium.relational.history.FileDatabaseHistory")
@@ -60,8 +60,7 @@ public class DebeziumConfiguration {
         .with("schema.history.internal", "io.debezium.relational.history.MemorySchemaHistory")
         //.with("schema.history.internal", "io.debezium.storage.file.history.FileSchemaHistory")
         //.with("schema.history.internal.file.filename", "/tmp/schistory.dat")
-        .with("database.allowPublicKeyRetrieval","true")
-        .with("topic.prefix","tutorial")
+        .with("topic.prefix","orcl")
         .build();
     }
 }
