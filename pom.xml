@@ -60,11 +60,6 @@
         </dependency>
         <dependency>
             <groupId>io.debezium</groupId>
-            <artifactId>debezium-connector-mysql</artifactId>
-            <version>${debezium.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.debezium</groupId>
             <artifactId>debezium-connector-oracle</artifactId>
             <version>${debezium.version}</version>
         </dependency>
@@ -75,24 +70,13 @@
 			<version>${jdbc-driver.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.33</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>mysql</artifactId>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -117,24 +101,6 @@
 			</activation>
 			<properties>
 				<spring.profiles.active>oracle</spring.profiles.active>
-			</properties>
-		</profile>
-		<profile>
-			<id>mysql</id>
-			<properties>
-				<spring.profiles.active>mysql</spring.profiles.active>
-			</properties>
-		</profile>
-		<profile>
-			<id>mixom</id>
-			<properties>
-				<spring.profiles.active>mixom</spring.profiles.active>
-			</properties>
-		</profile>
-		<profile>
-			<id>mixmo</id>
-			<properties>
-				<spring.profiles.active>mixmo</spring.profiles.active>
 			</properties>
 		</profile>
 	</profiles>

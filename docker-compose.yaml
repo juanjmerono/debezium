@@ -1,45 +1,7 @@
 version: "3.9"
 services:
-  # Install Source MySQL DB and setup the Customer database
-  mysql-1:
-    profiles: ["mysql","database"]
-    container_name: source-database
-    image: mysql:8.0-debian
-    ports:
-      - 3305:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: customerdb
-
-  # Install Target MySQL DB and setup the Customer database
-  mysql-2:
-    profiles: ["mysql","database"]
-    container_name: target-database
-    image: mysql:8.0-debian
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: customerdb
-
-  debezium-1:
-    profiles: ["dbzserver"]
-    container_name: source-mysql-debezium
-    build: .
-    # image: quay.io/debezium/server:2.3.4.Final
-    # depends_on: 
-    #   - mysql-1
-    volumes:
-      - ./debezium-mysql.properties:/debezium/conf/application.properties
-      #- ./data:/debezium/data
-
   # # Install Source Oracle DB and setup the Customer database
   oracle-1:
-    profiles: ["oracle","database"]
     container_name: src-database
     image: gvenzl/oracle-xe:11
     ports:
@@ -51,7 +13,6 @@ services:
 
   # # Install Source Oracle DB and setup the Customer database
   oracle-2:
-    profiles: ["oracle","database"]
     container_name: tgt-database
     image: gvenzl/oracle-xe:11
     ports:
@@ -60,74 +21,3 @@ services:
       ORACLE_PASSWORD: root
       APP_USER: myuser
       APP_USER_PASSWORD: mypassword
-
-  debezium-2:
-    profiles: ["dbzserver"]
-    container_name: source-oracle-debezium
-    build: .
-    # image: quay.io/debezium/server:2.3.4.Final
-    # depends_on: 
-    #   - oracle-1
-    volumes:
-      - ./debezium-oracle.properties:/debezium/conf/application.properties
-      #- ./data:/debezium/data
-
-  zookeeper:
-    profiles: ["core"]
-    image: quay.io/debezium/zookeeper:2.4.1.Final
-    ports:
-      - 2181:2181
-      - 2888:2888
-      - 3888:3888
-  kafka:
-    profiles: ["core"]
-    image: quay.io/debezium/kafka:2.3.4.Final
-    ports:
-      - 9092:9092
-    depends_on:
-      - zookeeper
-    environment:
-      - ZOOKEEPER_CONNECT=zookeeper:2181
-  db-adminer:
-    profiles: ["core"]
-    image: adminer
-    restart: always
-    ports:
-      - 7080:8080
-  kafka-ui:
-    profiles: ["core"]
-    image: provectuslabs/kafka-ui:latest
-    ports:
-      - 9081:9081
-    depends_on:
-      - kafka
-    environment:
-      - SERVER_PORT=9081
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
-      - KAFKA_CLUSTERS_0_NAME=local
-  connect:
-    profiles: ["core"]
-    image: quay.io/debezium/connect:2.4.1.Final
-    ports:
-      - 8083:8083
-    depends_on:
-      - kafka
-      #- mysql-1
-      #- postgresql
-    environment:
-      - BOOTSTRAP_SERVERS=kafka:9092
-      - GROUP_ID=1
-      - CONFIG_STORAGE_TOPIC=my_connect_configs
-      - OFFSET_STORAGE_TOPIC=my_connect_offsets
-      - STATUS_STORAGE_TOPIC=my_connect_statuses
-  debezium-ui:
-    profiles: ["core"]
-    image: debezium/debezium-ui:latest
-    ports:
-      - 9080:8080
-    depends_on:
-      - connect
-    environment:
-      - KAFKA_CONNECT_URIS=http://connect:8083
-      - ENABLE_DEBEZIUM_SCRIPTING=true
