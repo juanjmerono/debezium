@@ -15,7 +15,7 @@ Activate ARCHIVELOG
 ```
 docker exec -it src-database /bin/sh
 
-$sqlplus / as sysdba
+$ sqlplus / as sysdba
 
 SQL> SHUTDOWN IMMEDIATE 
 SQL> STARTUP MOUNT
@@ -37,6 +37,14 @@ ALTER TABLE MYUSER.USERS ADD SUPPLEMENTAL LOG DATA (ALL) COLUMNS;
 mvnw clean spring-boot:run
 ```
 
+# Restart debezium server and check logs
+
+```
+docker-compose restart debezium
+docker-compose logs -f debezium
+```
+
 # Connect to test app
 
 http://localhost:8080/
+

@@ -21,3 +21,13 @@ services:
       ORACLE_PASSWORD: root
       APP_USER: myuser
       APP_USER_PASSWORD: mypassword
+
+  debezium:
+    container_name: src-orcl-dbz
+    build: .
+    # image: quay.io/debezium/server:2.3.4.Final
+    depends_on: 
+      - oracle-1
+    volumes:
+      - ./debezium-orcl.properties:/debezium/conf/application.properties
+      #- ./data:/debezium/data
