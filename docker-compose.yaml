@@ -10,6 +10,8 @@ services:
       ORACLE_PASSWORD: root
       APP_USER: myuser
       APP_USER_PASSWORD: mypassword
+    volumes:
+      - ./startup.sql:/container-entrypoint-startdb.d/1-startup.sql
 
   # # Install Source Oracle DB and setup the Customer database
   oracle-2:
