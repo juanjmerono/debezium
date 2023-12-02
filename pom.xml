@@ -16,7 +16,8 @@
 	<properties>
 		<java.version>17</java.version>
 		<debezium.version>2.3.4.Final</debezium.version>
-		<jdbc-driver.version>12.2.0.1.0</jdbc-driver.version>
+		<jdbc-driver.version>19.13.0.0.1</jdbc-driver.version>
+		<spring-cloud.version>2022.0.4</spring-cloud.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -45,8 +46,8 @@
       		<optional>true</optional>
     	</dependency>			
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>jdbc.driver</artifactId>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
 			<version>${jdbc-driver.version}</version>
 		</dependency>
 		<!-- Debezium -->
@@ -98,6 +99,11 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<image>
+						<name>yoanyo/debezium-app</name>
+						<env>
+							<BPE_DELIM_JAVA_TOOL_OPTIONS xml:space="preserve"> </BPE_DELIM_JAVA_TOOL_OPTIONS>
+							<BPE_APPEND_JAVA_TOOL_OPTIONS>-Duser.timezone=Europe/Madrid</BPE_APPEND_JAVA_TOOL_OPTIONS>
+						</env>
 						<builder>paketobuildpacks/builder-jammy-base:latest</builder>
 					</image>
 				</configuration>

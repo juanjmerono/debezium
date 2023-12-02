@@ -2,31 +2,34 @@
 
 Debezium Proof of concept
 
+# Build application image
+
+```
+mvnw clean spring-boot:build-image
+```
+
 # Start Databases (Oracle XE 11)
 
 ```
 docker-compose up -d
 ```
 
-# Run application
+Maybe you have to run twice to restart spring app
 
-```
-mvnw clean spring-boot:run
-```
+# Connect to test app
+
+http://localhost:8080/
 
 # Connect to debezium UI
 
 http://localhost:9080/
 
-Configure oracle connector
+Check oracle connector
 
 # Connect to kafka ui
 
 http://localhost:9081/
 
-List topics to show auto creation
+Check topics, consumer and messages
 
-# Connect to test app
-
-http://localhost:8080/
 

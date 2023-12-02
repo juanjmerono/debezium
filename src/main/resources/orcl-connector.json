@@ -1,0 +1,25 @@
+{
+    "name": "oracle-connector-1",
+    "config": {
+        "connector.class": "io.debezium.connector.oracle.OracleConnector",
+        "connector.displayName": "Oracle",
+        "database.user": "system",
+        "database.password": "root",
+        "database.dbname": "XE",
+        "topic.creation.default.partitions": "-1",
+        "topic.creation.group-id.exclude": "exclude",
+        "topic.creation.default.cleanup.policy": "compact",
+        "topic.creation.default&cleanup&policy": "compact",
+        "connector.id": "oracle",
+        "database.port": "1521",
+        "topic.creation.groups": "group-id",
+        "topic.prefix": "oracle",
+        "schema.history.internal": "io.debezium.relational.history.MemorySchemaHistory",
+        "schema.history.internal.kafka.topic": "schemahistory.myuser",
+        "database.history": "io.debezium.relational.history.MemoryDatabaseHistory",
+        "database.hostname": "oracle-1",
+        "name": "oracle-connector-1",
+        "topic.creation.default.replication.factor": "-1",
+        "topic.creation.group-id.include": "include"
+    }
+}

@@ -5,14 +5,14 @@ import java.util.Collections;
 import org.apache.kafka.common.serialization.Serde;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener; 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import es.um.atica.debezium.demo.application.port.UserService;
 import io.debezium.serde.DebeziumSerdes;
 import lombok.extern.slf4j.Slf4j; 
   
 @Slf4j
-@Component
+@Service
 public class DebeziumKafkaListener {
 
     private final UserService userService;
@@ -31,7 +31,7 @@ public class DebeziumKafkaListener {
     }
 
 
-    @KafkaListener(topics = "oracle.MYUSER.USERS") 
+    @KafkaListener(topics = "oracle.MYUSER.USERS", groupId = "${spring.kafka.consumer.group-id}") 
     public void consume(String payload) { 
         //log.info(payload);
         UserDebezium user = serdeUserAfter.deserializer().deserialize("payload",payload.getBytes());

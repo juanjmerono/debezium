@@ -30,6 +30,7 @@ services:
       - 2181:2181
       - 2888:2888
       - 3888:3888
+
   kafka:
     image: quay.io/debezium/kafka:2.3.4.Final
     ports:
@@ -39,11 +40,13 @@ services:
     environment:
       - ZOOKEEPER_CONNECT=zookeeper:2181
       - AUTO_CREATE_TOPICS=true
+
   # db-adminer:
   #   image: adminer
   #   restart: always
   #   ports:
   #     - 7080:8080
+
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     ports:
@@ -55,9 +58,9 @@ services:
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
       - KAFKA_CLUSTERS_0_NAME=local
+
   connect:
     build: .
-    #image: quay.io/debezium/connect:2.4.1.Final
     ports:
       - 8083:8083
     depends_on:
@@ -76,7 +79,6 @@ services:
       - debezium.source.schema.history.internal=io.debezium.relational.history.MemorySchemaHistory
 
   debezium-ui:
-    #image: debezium/debezium-ui:latest
     build:
       context: .
       dockerfile: Dockerfile-ui
@@ -87,3 +89,11 @@ services:
     environment:
       - KAFKA_CONNECT_URIS=http://connect:8083
       - ENABLE_DEBEZIUM_SCRIPTING=true
+
+  spring:
+    image: yoanyo/debezium-app
+    ports:
+      - 8080:8080
+    depends_on:
+      - oracle-1
+      - kafka
