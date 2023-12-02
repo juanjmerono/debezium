@@ -8,35 +8,25 @@ Debezium Proof of concept
 docker-compose up -d
 ```
 
-## Configure Oracle Archive Log
-
-Activate ARCHIVELOG
-
-```
-docker exec -it src-database /bin/sh
-
-$sqlplus / as sysdba
-
-SQL> SHUTDOWN IMMEDIATE 
-SQL> STARTUP MOUNT
-SQL> ALTER DATABASE ARCHIVELOG;
-SQL> ALTER DATABASE OPEN;
-SQL> ARCHIVE LOG LIST
-SQL> ALTER DATABASE ADD SUPPLEMENTAL LOG DATA;
-```
-
-After running application (myuser.users table is created) run:
-
-```
-ALTER TABLE MYUSER.USERS ADD SUPPLEMENTAL LOG DATA (ALL) COLUMNS;
-```
-
 # Run application
 
 ```
 mvnw clean spring-boot:run
 ```
 
+# Connect to debezium UI
+
+http://localhost:9080/
+
+Configure oracle connector
+
+# Connect to kafka ui
+
+http://localhost:9081/
+
+List topics to show auto creation
+
 # Connect to test app
 
 http://localhost:8080/
+

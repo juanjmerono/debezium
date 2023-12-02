@@ -10,6 +10,8 @@ services:
       ORACLE_PASSWORD: root
       APP_USER: myuser
       APP_USER_PASSWORD: mypassword
+    volumes:
+      - ./startup.sql:/container-entrypoint-startdb.d/1-startup.sql
 
   # # Install Source Oracle DB and setup the Customer database
   oracle-2:
@@ -21,3 +23,67 @@ services:
       ORACLE_PASSWORD: root
       APP_USER: myuser
       APP_USER_PASSWORD: mypassword
+
+  zookeeper:
+    image: quay.io/debezium/zookeeper:2.3.4.Final
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+  kafka:
+    image: quay.io/debezium/kafka:2.3.4.Final
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper
+    environment:
+      - ZOOKEEPER_CONNECT=zookeeper:2181
+      - AUTO_CREATE_TOPICS=true
+  # db-adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 7080:8080
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 9081:9081
+    depends_on:
+      - kafka
+    environment:
+      - SERVER_PORT=9081
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+      - KAFKA_CLUSTERS_0_NAME=local
+  connect:
+    build: .
+    #image: quay.io/debezium/connect:2.4.1.Final
+    ports:
+      - 8083:8083
+    depends_on:
+      - kafka
+      - oracle-1
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=my_connect_configs
+      - OFFSET_STORAGE_TOPIC=my_connect_offsets
+      - STATUS_STORAGE_TOPIC=my_connect_statuses
+      - CONNECT_TOPIC_CREATION_ENABLE=true
+      - ENABLE_DEBEZIUM_KC_REST_EXTENSION=true
+      - ENABLE_DEBEZIUM_SCRIPTING=true
+      - CONNECT_REST_EXTENSION_CLASSES=io.debezium.kcrestextension.DebeziumConnectRestExtension
+      - debezium.source.schema.history.internal=io.debezium.relational.history.MemorySchemaHistory
+
+  debezium-ui:
+    #image: debezium/debezium-ui:latest
+    build:
+      context: .
+      dockerfile: Dockerfile-ui
+    ports:
+      - 9080:8080
+    depends_on:
+      - connect
+    environment:
+      - KAFKA_CONNECT_URIS=http://connect:8083
+      - ENABLE_DEBEZIUM_SCRIPTING=true
